@@ -1,12 +1,29 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:searchapp/app/data/model/job_model.dart';
+import 'package:searchapp/app/data/provider/firebase_provider.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
 
-  final count = 0.obs;
+  // Jobs
+  final FirebaseProvider _firebaseProvider = FirebaseProvider();
+  final jobs = <JobModel>[].obs;
+  final isLoading = false.obs;
+
+  // Search
+  final searchController = TextEditingController();
+  
   @override
   void onInit() {
     super.onInit();
+
+    // Load jobs
+    isLoading.value = true;
+    _firebaseProvider.getJobs().then((value) {
+      debugPrint("job length: ${value.length}");
+      jobs.value = value;
+      isLoading.value = false;
+    });
   }
 
   @override
@@ -19,5 +36,4 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
 }
